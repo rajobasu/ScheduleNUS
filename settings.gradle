@@ -20,7 +20,7 @@ pluginManagement {
     }
 
 }
-rootProject.name = 'KMP_Demo'
+rootProject.name = 'Scheduler'
 
 
 include(':androidApp')

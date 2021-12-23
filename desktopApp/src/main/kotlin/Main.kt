@@ -1,6 +1,4 @@
-import me.rajobasu.shared.TesterClass
-
 fun main() {
-    println(TesterClass().printFunky())
-    println("Hello")
+    println("Program has started!")
+    startIOInteraction()
 }
