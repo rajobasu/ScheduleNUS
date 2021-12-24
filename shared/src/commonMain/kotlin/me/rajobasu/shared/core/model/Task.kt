@@ -5,9 +5,11 @@ import kotlinx.datetime.LocalDateTime
 var currentTaskCount = 1;
 
 open class Task(
-    var estimatedTimeInMinutes: Int,
-    var description: String?,
-    var deadline: LocalDateTime,
+    var estimatedTimeInMinutes: Int? = null,
+    var description: String? = null,
+    var deadline: LocalDateTime? = null,
+    var startTime: LocalDateTime? = null,
+    var endTime: LocalDateTime? = null,
 ) {
     val uid = currentTaskCount++
 
