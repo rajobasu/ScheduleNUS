@@ -2,12 +2,11 @@ package me.rajobasu.shared.core.commands
 
 import kotlinx.datetime.toLocalDateTime
 import me.rajobasu.shared.core.algo.ScheduleManager
-import me.rajobasu.shared.core.model.DeadlineTask
 import me.rajobasu.shared.core.model.Task
 
 
 sealed class Command {
-    abstract fun execute(scheduleManager: ScheduleManager) : Boolean
+    abstract fun execute(scheduleManager: ScheduleManager): Boolean
 }
 
 class AddCommand(
@@ -25,7 +24,11 @@ class AddCommand(
         val deadline = arguments[1].replace(' ', 'T').toLocalDateTime()
         val description = arguments[2]
 
-        task = DeadlineTask(deadline, expectedTime, description)
+        task = Task(
+            estimatedTimeInMinutes = expectedTime,
+            deadline = deadline,
+            description = description,
+        )
     }
 
     override fun execute(scheduleManager: ScheduleManager) = scheduleManager.addTask(task)

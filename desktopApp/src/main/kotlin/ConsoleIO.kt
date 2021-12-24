@@ -1,4 +1,3 @@
-
 import me.rajobasu.shared.core.algo.ScheduleManager
 import me.rajobasu.shared.core.commands.parseAndGetCommand
 import me.rajobasu.shared.core.controller.Controller
@@ -26,10 +25,9 @@ fun startIOInteraction() {
 
 fun printSchedule(schedule: Schedule) {
     println("=".repeat(10))
-    schedule.taskList.forEach {
-        pair ->
+    schedule.taskList.forEach { taskChunk ->
         run {
-            println("Scheduled Time: ${pair.first}   \n${pair.second}")
+            println("Scheduled Time: ${taskChunk.startTime}   \n${taskChunk.parentTask.description}")
             println("-".repeat(6))
         }
     }

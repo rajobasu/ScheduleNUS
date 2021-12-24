@@ -1,7 +1,7 @@
 buildscript {
     ext {
         kotlin_version = '1.4.10'
-        coroutines_version ="1.6.0"
+        coroutines_version = "1.6.0"
     }
 
     repositories {
@@ -10,7 +10,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10')
+        classpath('org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10')
         classpath('com.android.tools.build:gradle:4.0.2')
     }
     dependencies {
