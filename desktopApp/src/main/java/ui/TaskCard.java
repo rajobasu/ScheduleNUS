@@ -33,9 +33,7 @@ public class TaskCard extends UiPart<Region> {
     @FXML
     private Label date;
     @FXML
-    private Label state;
-    @FXML
-    private Label priority;
+    private Label duration;
     @FXML
     private FlowPane tags;
 
@@ -48,8 +46,9 @@ public class TaskCard extends UiPart<Region> {
         this.task = task;
         id.setText(displayedIndex + ". ");
         name.setText(task.getParentTask().getDescription());
-        time.setText(task.getTimeChunk().getStartTime().toString());
-        date.setText(task.getTimeChunk().getDateString());
+        time.setText("Start at : " + task.getTimeChunk().getStartTime().toString());
+        date.setText("Date     : " + task.getTimeChunk().getDateString());
+        duration.setText(task.getTimeChunk().getTimeSpanInMins() + "Mins");
     }
 
     @Override

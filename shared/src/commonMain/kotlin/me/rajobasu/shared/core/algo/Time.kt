@@ -38,7 +38,9 @@ class Time(
     }
 
     override fun toString(): String {
-        return "${getHours()}:${getMinutes()}"
+        val hourString = if (getHours() > 9) "${getHours()}" else "0${getHours()}";
+        val minuteString = if (getMinutes() > 9) "${getMinutes()}" else "0${getMinutes()}"
+        return "$hourString:$minuteString"
     }
 
     override fun hashCode(): Int {

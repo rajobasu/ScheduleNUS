@@ -29,7 +29,7 @@ public class DayCard extends UiPart<Region> {
     @FXML
     private Label name;
     @FXML
-    private Label date;
+    private Label time;
     @FXML
     private Label id;
 
@@ -40,7 +40,9 @@ public class DayCard extends UiPart<Region> {
         super(FXML);
         this.task = task;
         name.setText(task.getParentTask().getDescription());
-        date.setText(task.getTimeChunk().getStartTime().toString());
+        time.setText(task.getTimeChunk().getStartTime()
+                + " to "
+                + task.getTimeChunk().getStartTime().add(task.getTimeChunk().getTimeSpanInMins()));
     }
 
     @Override
