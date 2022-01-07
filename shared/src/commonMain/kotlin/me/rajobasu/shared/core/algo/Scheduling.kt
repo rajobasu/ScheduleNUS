@@ -33,6 +33,7 @@ fun generateSchedule(
             break
         }
         val result = schedulableTimeInterval.eatMinutes(task.estimatedTimeInMinutes)
+        println(result)
         result?.run {
             val timeChunks = result.first
             schedulableTimeInterval = result.second

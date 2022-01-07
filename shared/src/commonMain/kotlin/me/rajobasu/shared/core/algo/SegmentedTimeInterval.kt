@@ -67,7 +67,6 @@ fun buildTimeInterval(
     sleepSchedulePreference: SleepSchedulePreference,
     workSchedulePreference: WorkSchedulePreference,
     days: Int,
-    startTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 ): SchedulableTimeInterval {
     val sortedBlockingTasks = blockingTasks.sortedBy { it.startTime }
     var startDay = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
@@ -94,9 +93,18 @@ fun buildTimeInterval(
 
             startTime = Time.from(firstTask.startTime!!).add(firstTask.estimatedTimeInMinutes)
         }
-
+        if (startTime != workSchedulePreference.endTime) {
+            allTimeChunks.add(
+                TimeChunk(
+                    currentDay,
+                    startTime,
+                    workSchedulePreference.endTime.minus(startTime).getTotalMinutes()
+                )
+            )
+        }
 
         startTime = workSchedulePreference.startTime
     }
+    print(allTimeChunks)
     return SegmentedTimeInterval(allTimeChunks)
 }
