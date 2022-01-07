@@ -1,5 +1,7 @@
 package ui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;
@@ -9,6 +11,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import me.rajobasu.shared.core.algo.ScheduleManager;
+import me.rajobasu.shared.core.algo.TaskChunk;
+import me.rajobasu.shared.core.commands.CommandFactoryKt;
+
+import java.util.ArrayList;
 
 
 /**
@@ -17,6 +23,8 @@ import me.rajobasu.shared.core.algo.ScheduleManager;
  */
 public class MainWindow extends UiPart<Stage> {
 
+    public static final ObservableList<TaskChunk> taskList = FXCollections.observableList(new ArrayList<>());
+    public static final WeeklyTasks weeklyTasks = new WeeklyTasks(taskList);
     private static final String FXML = "MainWindow.fxml";
     private Stage primaryStage;
     private ScheduleManager scheduleManager;
@@ -120,10 +128,10 @@ public class MainWindow extends UiPart<Stage> {
 
         // pass in date into weeklyPanel constructor instead of
         // a taskList. Currently placeholder
-        weeklyPanel = new WeeklyPanel(scheduleManager.getCurrentSchedule());
+        taskList.addAll(scheduleManager.currentSchedule.getTaskList());
+        weeklyTasks.updateWeeklyList(scheduleManager.currentSchedule.getFirstDate());
+        weeklyPanel = new WeeklyPanel(weeklyTasks);
         weeklyPanelPlaceholder.getChildren().add(weeklyPanel.getRoot());
-
-
     }
 
 
@@ -160,13 +168,11 @@ public class MainWindow extends UiPart<Stage> {
      * Executes the command and returns the result.
      */
     private void executeCommand(String commandText) {
-        //@@author naranghardik16-reused
-        //Reused from rajobasu, a previous student
-        //with minor modiciations
-        resultDisplay.setFeedbackToUser(
-                "wowow"
-        );
+        CommandFactoryKt.parseAndGetCommand(commandText).execute(scheduleManager);
+        taskList.clear();
+        taskList.addAll(scheduleManager.currentSchedule.getTaskList());
+        weeklyTasks.updateWeeklyList(scheduleManager.currentSchedule.getFirstDate());
+        resultDisplay.setFeedbackToUser("Good Job");
         this.commandBox.setCommandTextField("");
-
     }
 }

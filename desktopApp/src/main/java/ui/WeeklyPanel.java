@@ -1,12 +1,10 @@
 package ui;
 
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import me.rajobasu.shared.core.model.Schedule;
 
 /**
  * Panel containing the list of daily panels for a particular week.
@@ -28,15 +26,14 @@ public class WeeklyPanel extends UiPart<Region> {
     /**
      * Creates a {@code WeeklyPanel} with the given {@code ObservableList}.
      */
-    public WeeklyPanel(Schedule weeklyTasks) {
+    public WeeklyPanel(WeeklyTasks weeklyTasks) {
         super(FXML);
 //        SimpleIntegerProperty observableWeekNumber = weeklyTasks.getObservableWeekNumber();
 //        LocalDate firstDayOfWeek = weeklyTasks.getFirstDayOfWeek();
 //        weekLabel.setText(String.format(
 //                WEEK_LABEL, observableWeekNumber.getValue(), weeklyTasks.getFirstDayOfWeek().toString()));
         for (int i = 0; i < 7; i++) {
-            DailyPanel dailyPanel =
-                    new DailyPanel(FXCollections.observableList(weeklyTasks.getTaskChunkListForDate(i)));
+            DailyPanel dailyPanel = new DailyPanel(weeklyTasks.getDailyTaskList(i));
             dailyHBox.getChildren().add(dailyPanel.getRoot());
             // This can probably be replaced with something more efficient
             dailyHBox.widthProperty()

@@ -27,10 +27,13 @@ class Schedule(
         return taskList.first().timeChunk.date
     }
 
-    fun getTaskChunkListForDate(date: Date): List<TaskChunk> {
-        println("WE GOT : $date")
+    private fun getTaskChunkListForDate(date: Date): List<TaskChunk> {
         return taskList.filter { it.timeChunk.date == date }
     }
 
     fun getTaskChunkListForDate(offset: Int) = getTaskChunkListForDate(getFirstDate().add(offset))
 }
+
+fun List<TaskChunk>.getFirstDate() = this.first().timeChunk.date
+fun List<TaskChunk>.getTaskChunkListForDate(date: Date) = this.filter { it.timeChunk.date == date }
+fun List<TaskChunk>.getTaskChunkListForDate(offset: Int) = getTaskChunkListForDate(getFirstDate().add(offset))
