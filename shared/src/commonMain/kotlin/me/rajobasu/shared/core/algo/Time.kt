@@ -1,5 +1,8 @@
 package me.rajobasu.shared.core.algo
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
 
 const val TOTAL_MINUTES_IN_DAY = 1440
@@ -10,13 +13,16 @@ class Time(
 ) {
     companion object {
         fun from(hours: Int, minutesPassed: Int) = Time(hours * 60 + minutesPassed)
+        fun currentTime(): Time {
+            val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            return Time.from(currentTime.hour, currentTime.minute);
+        }
     }
 
     fun getHours() = minutes / MINUTES_PER_HOUR
     fun getMinutes() = minutes % MINUTES_PER_HOUR
     fun getTotalMinutes() = minutes
     infix fun minus(time: Time) = Time(abs(this.minutes - time.minutes))
-
 }
 
 val DAY_BEGIN = Time(0)

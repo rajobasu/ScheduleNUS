@@ -8,20 +8,18 @@ class Schedule(
     /**
      * This method checks if all the TaskChunk times add up to the timing of the parent Task
      */
-    fun isValid(): Boolean {
-        return getAllUnfulfilledTasks().isEmpty()
-    }
-
     fun getAllUnfulfilledTasks(): List<Task> {
         return taskList.groupBy {
             it.parentTask
         }.filter {
-            it.value.sumOf {
-                it.timeSpanInMins
-            } == it.key.estimatedTimeInMinutes
+            it.value.sumOf { x -> x.timeSpanInMins } < it.key.estimatedTimeInMinutes
         }.map {
             it.key
         }
+    }
+
+    fun minuteDeficit() {
+        
     }
 }
 

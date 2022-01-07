@@ -3,6 +3,7 @@ package me.rajobasu.shared.core.commands
 import kotlinx.datetime.toLocalDateTime
 import me.rajobasu.shared.core.algo.ScheduleManager
 import me.rajobasu.shared.core.model.Task
+import me.rajobasu.shared.core.model.TaskType
 
 
 sealed class Command {
@@ -28,6 +29,7 @@ class AddCommand(
             estimatedTimeInMinutes = expectedTime,
             deadline = deadline,
             description = description,
+            taskType = TaskType.FluidTask.DeadlineTask,
         )
     }
 

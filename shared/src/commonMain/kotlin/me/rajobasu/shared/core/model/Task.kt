@@ -4,12 +4,26 @@ import kotlinx.datetime.LocalDateTime
 
 var currentTaskCount = 1;
 
+sealed class TaskType {
+    sealed class FluidTask : TaskType() {
+        object DeadlineTask : FluidTask()
+        object GoalTask : FluidTask()
+    }
+
+    sealed class FixedTask : TaskType() {
+        object SleepTask : FixedTask()
+        object LectureTask : FixedTask()
+    }
+}
+
+
 open class Task(
-    var estimatedTimeInMinutes: Int? = null,
+    var estimatedTimeInMinutes: Int,
     var description: String? = null,
     var deadline: LocalDateTime? = null,
     var startTime: LocalDateTime? = null,
     var endTime: LocalDateTime? = null,
+    var taskType: TaskType,
 ) {
     val uid = currentTaskCount++
 

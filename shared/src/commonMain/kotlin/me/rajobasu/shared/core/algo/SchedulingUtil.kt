@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.plus
 import me.rajobasu.shared.core.model.Task
+import me.rajobasu.shared.core.model.TaskType
 
 fun generateSleepTasks(
     startDay: LocalDate,
@@ -18,8 +19,9 @@ fun generateSleepTasks(
             res.add(
                 Task(
                     startTime = shiftedDay plus e.first,
-                    endTime = shiftedDay plus e.second,
-                    description = "Sleep time"
+                    estimatedTimeInMinutes = e.second,
+                    description = "Sleep time",
+                    taskType = TaskType.FixedTask.SleepTask,
                 )
             )
         }
