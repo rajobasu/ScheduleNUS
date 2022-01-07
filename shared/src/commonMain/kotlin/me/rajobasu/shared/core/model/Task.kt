@@ -27,6 +27,10 @@ open class Task(
 ) {
     val uid = currentTaskCount++
 
+    companion object {
+        val DUMMY = Task(1, taskType = TaskType.FluidTask.GoalTask)
+    }
+
     override fun toString(): String {
         return "Expected Time: ${estimatedTimeInMinutes}mins, \nDeadline: $deadline ,\nDescription: $description \n"
 

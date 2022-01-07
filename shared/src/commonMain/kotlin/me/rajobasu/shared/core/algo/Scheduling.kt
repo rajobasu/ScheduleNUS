@@ -20,6 +20,7 @@ fun generateSchedule(
         workSchedulePreference,
         14
     )
+    val simpleTimeline = SimpleTimeline(schedulableTimeInterval)
 
     // for now assume that we have only deadline tasks.
     val allFixedTaskAsTimeChunks = allFixedTasks.map { task ->
@@ -30,23 +31,18 @@ fun generateSchedule(
             )
         )
     }
-    val allDeadlineTasksAsTaskChunks = mutableListOf<TaskChunk>()
 
+    var timeConsumed = 0
     for (task in allDeadlineTasks) {
-        if (schedulableTimeInterval.isEmpty()) {
-            break
-        }
-        val result = schedulableTimeInterval.eatMinutes(task.estimatedTimeInMinutes)
-        result?.run {
-            val timeChunks = result.first
-            schedulableTimeInterval = result.second
-
-            allDeadlineTasksAsTaskChunks.addAll(timeChunks.map { timeChunk ->
-                TaskChunk(task, timeChunk)
-            })
-        }
+        simpleTimeline.blockTime(timeConsumed, task.estimatedTimeInMinutes, task)
     }
 
+    repeat(tasks.size) {
+        iterateImprovementOnSchedule(simpleTimeline, tasks)
+    }
+
+
+    val allDeadlineTasksAsTaskChunks = simpleTimeline.convertToActualTaskChunkList()
     val finalTaskChunksList = allDeadlineTasksAsTaskChunks + allFixedTaskAsTimeChunks
     return Schedule(finalTaskChunksList)
 }
@@ -54,3 +50,16 @@ fun generateSchedule(
 private fun getFixedTaskList(tasks: List<Task>): List<Task> {
     return tasks.filter { task -> task.taskType is TaskType.FixedTask }
 }
+
+
+fun iterateImprovementOnSchedule(simpleTimeline: SimpleTimeline, tasks: List<Task>) {
+
+}
+
+class TaskSegment(
+    val parentTask: Task,
+
+    ) {
+
+}
+

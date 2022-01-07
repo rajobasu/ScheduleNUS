@@ -7,6 +7,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 import me.rajobasu.shared.core.model.Task
+import kotlin.math.min
+import kotlin.random.Random
 
 
 /**
@@ -18,15 +20,83 @@ interface SchedulableTimeInterval {
 
     /**
      * Key assumption here is that minutes < totalMinutes()
+     * This method just blocks the underlying sections.
      */
     fun eatMinutes(minutes: Int): Pair<List<TimeChunk>, SegmentedTimeInterval>?
     fun minutesBefore(localDateTime: LocalDateTime): Int
     fun isEmpty() = totalMinutes() == 0
+
+}
+
+class SimpleTimeline(
+    private val schedulableTimeInterval: SchedulableTimeInterval
+) {
+    data class TimelineSegment(val minutesFrom: Int, val minutesEnd: Int, val task: Task)
+
+    private val timeline = mutableSetOf<TimelineSegment>()
+
+    init {
+        timeline.add(
+            TimelineSegment(
+                schedulableTimeInterval.totalMinutes(),
+                schedulableTimeInterval.totalMinutes() + 10,
+                Task.DUMMY
+            )
+        )
+    }
+
+    fun blockTime(minutesFrom: Int, minutesEnd: Int, task: Task) {
+        timeline.add(TimelineSegment(minutesFrom, minutesEnd, task))
+    }
+
+    fun unBlockTime(minutesFrom: Int, minutesEnd: Int) {
+        val parentSegment = timeline.find { it.minutesFrom <= minutesFrom && it.minutesEnd >= minutesEnd }!!
+        timeline.remove(parentSegment)
+        if (parentSegment.minutesFrom < minutesFrom) {
+            timeline.add(TimelineSegment(parentSegment.minutesFrom, minutesFrom, parentSegment.task))
+        }
+        if (parentSegment.minutesEnd > minutesEnd) {
+            timeline.add(TimelineSegment(minutesEnd, parentSegment.minutesEnd, parentSegment.task))
+        }
+    }
+
+    fun findTime(length: Int, deadline: Int): Int? {
+        var start = 0
+        for (e in timeline) {
+            val nextBlock = min(e.minutesFrom, deadline)
+            if (start + length > nextBlock) {
+                start = e.minutesEnd
+                if (nextBlock == deadline) {
+                    return null
+                }
+            }
+            return getRandomStartTime(start, nextBlock)
+        }
+        return null
+    }
+
+    fun convertToActualTaskChunkList(): List<TaskChunk> {
+        var current = 0
+        val taskChunks = mutableListOf<TaskChunk>()
+        for (e in timeline) {
+            if (e.minutesFrom == schedulableTimeInterval.totalMinutes()) break
+            if (current < e.minutesFrom) schedulableTimeInterval.eatMinutes(e.minutesFrom - current)
+            schedulableTimeInterval.eatMinutes(e.minutesEnd - e.minutesFrom)?.first?.forEach {
+                taskChunks.add(TaskChunk(e.task, it))
+            }
+            current = e.minutesEnd
+        }
+        return taskChunks
+    }
+}
+
+fun getRandomStartTime(from: Int, to: Int): Int {
+    return Random(Clock.System.now().epochSeconds).nextInt(to / 10 + 1 - from / 10) * 10 + from
 }
 
 
 class SegmentedTimeInterval(
-    private val allTimeChunks: List<TimeChunk>
+    private var allTimeChunks: List<TimeChunk>
 ) : SchedulableTimeInterval {
     override fun totalMinutes(): Int {
         return allTimeChunks.sumOf { it.timeSpanInMins }
@@ -53,14 +123,30 @@ class SegmentedTimeInterval(
                 break
             }
         }
-
+        this.allTimeChunks = newTimeChunksList
         return Pair(timeChunksGiven, SegmentedTimeInterval(newTimeChunksList))
     }
 
     override fun minutesBefore(localDateTime: LocalDateTime): Int {
-        TODO("Need to implement")
+        val date = localDateTime.date.toDate()
+        val time = Time.from(localDateTime)
+
+
+        return allTimeChunks.filter { tc ->
+            (tc.date.getTotalDays() <= date.getTotalDays()) && (tc.startTime.getTotalMinutes() <= time.getTotalMinutes())
+        }.sumOf { tc ->
+            if (tc.date.getTotalDays() < date.getTotalDays()) {
+                tc.timeSpanInMins
+            } else {
+                min(
+                    tc.timeSpanInMins,
+                    tc.timeSpanInMins + tc.startTime.getTotalMinutes() - time.getTotalMinutes()
+                )
+            }
+        }
     }
 }
+
 
 fun buildTimeInterval(
     blockingTasks: List<Task>,
@@ -110,3 +196,4 @@ fun buildTimeInterval(
     }
     return SegmentedTimeInterval(allTimeChunks)
 }
+
