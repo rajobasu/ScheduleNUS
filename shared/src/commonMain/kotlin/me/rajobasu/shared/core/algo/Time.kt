@@ -27,6 +27,12 @@ class Time(
     fun getMinutes() = minutes % MINUTES_PER_HOUR
     fun getTotalMinutes() = minutes
     infix fun minus(time: Time) = Time(abs(this.minutes - time.minutes))
+    infix fun add(time: Time) = Time(this.minutes + time.minutes)
+    infix fun add(mins: Int) = Time(this.minutes + mins)
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is Time) this.minutes == other.minutes else false
+    }
 }
 
 val DAY_BEGIN = Time(0)

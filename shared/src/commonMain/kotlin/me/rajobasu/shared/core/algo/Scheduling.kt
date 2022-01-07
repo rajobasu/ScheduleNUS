@@ -15,7 +15,12 @@ fun generateSchedule(
     val allDeadlineTasks =
         allMovableTasks.filter { task -> task.taskType is TaskType.FluidTask.DeadlineTask }.sortedBy { it.deadline }
 
-    var schedulableTimeInterval = buildTimeInterval(allFixedTasks, sleepSchedulePreference, workSchedulePreference)
+    var schedulableTimeInterval = buildTimeInterval(
+        allFixedTasks,
+        sleepSchedulePreference,
+        workSchedulePreference,
+        14
+    )
 
     // for now assume that we have only deadline tasks.
     val allFixedTaskAsTimeChunks = allFixedTasks.map { task ->
