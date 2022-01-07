@@ -5,9 +5,6 @@ import me.rajobasu.shared.core.algo.ScheduleManager
 import me.rajobasu.shared.core.model.Task
 import me.rajobasu.shared.core.model.TaskType
 
-const val addCommandSample = "add;90;2022-01-10 23:59;Task 1"
-
-
 sealed class Command {
     abstract fun execute(scheduleManager: ScheduleManager): Boolean
 }

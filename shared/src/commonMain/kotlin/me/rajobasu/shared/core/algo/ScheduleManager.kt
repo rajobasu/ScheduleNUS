@@ -1,6 +1,6 @@
 package me.rajobasu.shared.core.algo
 
-import me.rajobasu.shared.core.commands.addCommandSample
+import me.rajobasu.shared.addTaskCommandSamples
 import me.rajobasu.shared.core.commands.parseAndGetCommand
 import me.rajobasu.shared.core.model.Schedule
 import me.rajobasu.shared.core.model.Task
@@ -13,7 +13,9 @@ class ScheduleManager {
     lateinit var currentSchedule: Schedule
 
     init {
-        parseAndGetCommand(addCommandSample).execute(this)
+        addTaskCommandSamples.forEach {
+            parseAndGetCommand(it).execute(this)
+        }
     }
 
     fun addTask(task: Task): Boolean {
