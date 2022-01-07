@@ -4,7 +4,6 @@ import me.rajobasu.shared.core.model.Schedule
 import me.rajobasu.shared.core.model.Task
 import me.rajobasu.shared.core.model.TaskType
 
-
 fun generateSchedule(
     tasks: List<Task>,
     sleepSchedulePreference: SleepSchedulePreference,
@@ -28,7 +27,7 @@ fun generateSchedule(
     }
     val allDeadlineTasksAsTaskChunks = mutableListOf<TaskChunk>()
 
-
+    println("Deadline tasks : $allDeadlineTasks")
     for (task in allDeadlineTasks) {
         if (schedulableTimeInterval.isEmpty()) {
             break

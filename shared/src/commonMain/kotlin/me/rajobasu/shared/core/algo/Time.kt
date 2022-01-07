@@ -33,6 +33,10 @@ class Time(
     override fun equals(other: Any?): Boolean {
         return if (other is Time) this.minutes == other.minutes else false
     }
+
+    override fun toString(): String {
+        return "${getHours()}:${getMinutes()}"
+    }
 }
 
 val DAY_BEGIN = Time(0)

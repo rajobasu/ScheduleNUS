@@ -9,18 +9,22 @@ import kotlinx.datetime.toLocalDateTime
 import me.rajobasu.shared.core.model.Task
 
 
+/**
+ * This class essentially acts as a single time interval, but is internally composed of several such. This can span
+ * across many days, and is essentially where the scheduling will take place.
+ */
 interface SchedulableTimeInterval {
     fun totalMinutes(): Int
+
+    /**
+     * Key assumption here is that minutes < totalMinutes()
+     */
     fun eatMinutes(minutes: Int): Pair<List<TimeChunk>, SegmentedTimeInterval>?
     fun minutesBefore(localDateTime: LocalDateTime): Int
     fun isEmpty() = totalMinutes() == 0
 }
 
 
-/**
- * This class essentially acts as a single time interval, but is internally composed of several such. This can span
- * across many days, and is essentially where the scheduling will take place.
- */
 class SegmentedTimeInterval(
     private val allTimeChunks: List<TimeChunk>
 ) : SchedulableTimeInterval {
@@ -29,12 +33,32 @@ class SegmentedTimeInterval(
     }
 
     override fun eatMinutes(minutes: Int): Pair<List<TimeChunk>, SegmentedTimeInterval> {
-        TODO("Not yet implemented")
+        val timeChunksGiven = mutableListOf<TimeChunk>()
+        var totMinutesLeft = minutes
+        val newTimeChunksList = allTimeChunks.toMutableList()
+        while (totMinutesLeft > 0) {
+            val timeChunk = newTimeChunksList.removeFirst()
+            if (timeChunk.timeSpanInMins <= totMinutesLeft) {
+                timeChunksGiven.add(timeChunk)
+                totMinutesLeft -= timeChunk.timeSpanInMins
+            } else {
+                val t1 = TimeChunk(timeChunk.date, timeChunk.startTime, totMinutesLeft)
+                val t2 = TimeChunk(
+                    date = timeChunk.date,
+                    startTime = timeChunk.startTime.add(totMinutesLeft),
+                    timeSpanInMins = timeChunk.timeSpanInMins - totMinutesLeft,
+                )
+                timeChunksGiven.add(t1)
+                newTimeChunksList.add(0, t2)
+                break
+            }
+        }
+
+        return Pair(timeChunksGiven, SegmentedTimeInterval(newTimeChunksList))
     }
 
     override fun minutesBefore(localDateTime: LocalDateTime): Int {
-        TODO("Not yet implemented")
-
+        TODO("Need to implement")
     }
 }
 
