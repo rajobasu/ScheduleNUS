@@ -1,6 +1,7 @@
 package me.rajobasu.shared.core.algo
 
 import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.math.abs
@@ -17,7 +18,10 @@ class Time(
             val currentTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             return Time.from(currentTime.hour, currentTime.minute);
         }
+
+        fun from(localDateTime: LocalDateTime) = Time.from(localDateTime.hour, localDateTime.minute)
     }
+
 
     fun getHours() = minutes / MINUTES_PER_HOUR
     fun getMinutes() = minutes % MINUTES_PER_HOUR

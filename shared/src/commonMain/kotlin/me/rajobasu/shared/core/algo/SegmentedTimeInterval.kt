@@ -1,13 +1,17 @@
 package me.rajobasu.shared.core.algo
 
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import me.rajobasu.shared.core.model.Task
 
 
 interface SchedulableTimeInterval {
     fun totalMinutes(): Int
-    fun eatMinutes(minutes: Int): Pair<Boolean, SegmentedTimeInterval>
+    fun eatMinutes(minutes: Int): Pair<List<TimeChunk>, SegmentedTimeInterval>?
     fun minutesBefore(localDateTime: LocalDateTime): Int
+    fun isEmpty() = totalMinutes() == 0
 }
 
 
@@ -20,7 +24,7 @@ class SegmentedTimeInterval : SchedulableTimeInterval {
         TODO("Not yet implemented")
     }
 
-    override fun eatMinutes(minutes: Int): Pair<Boolean, SegmentedTimeInterval> {
+    override fun eatMinutes(minutes: Int): Pair<List<TimeChunk>, SegmentedTimeInterval> {
         TODO("Not yet implemented")
     }
 
@@ -32,7 +36,8 @@ class SegmentedTimeInterval : SchedulableTimeInterval {
 fun buildTimeInterval(
     blockingTasks: List<Task>,
     sleepSchedulePreference: SleepSchedulePreference,
-    workSchedulePreference: WorkSchedulePreference
+    workSchedulePreference: WorkSchedulePreference,
+    startTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 ): SchedulableTimeInterval {
     return SegmentedTimeInterval()
 }

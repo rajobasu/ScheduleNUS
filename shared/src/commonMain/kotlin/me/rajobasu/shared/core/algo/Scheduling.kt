@@ -12,17 +12,37 @@ fun generateSchedule(
 ): Schedule {
     val allFixedTasks = getFixedTaskList(tasks)
     val allMovableTasks = tasks.filterNot { t -> allFixedTasks.contains(t) }
+    val allDeadlineTasks =
+        allMovableTasks.filter { task -> task.taskType is TaskType.FluidTask.DeadlineTask }.sortedBy { it.deadline }
 
-    val schedulableTimeInterval = buildTimeInterval(allFixedTasks, sleepSchedulePreference, workSchedulePreference)
+    var schedulableTimeInterval = buildTimeInterval(allFixedTasks, sleepSchedulePreference, workSchedulePreference)
+
+    // for now assume that we have only deadline tasks.
+    val allFixedTaskAsTimeChunks = allFixedTasks.map { task ->
+        TaskChunk(task, TimeChunk(task.startTime!!.date, Time.from(task.startTime!!), task.estimatedTimeInMinutes))
+    }
+    val allDeadlineTasksAsTaskChunks = mutableListOf<TaskChunk>()
 
 
-    return Schedule(listOf())
+    for (task in allDeadlineTasks) {
+        if (schedulableTimeInterval.isEmpty()) {
+            break
+        }
+        val result = schedulableTimeInterval.eatMinutes(task.estimatedTimeInMinutes)
+        result?.run {
+            val timeChunks = result.first
+            schedulableTimeInterval = result.second
+
+            allDeadlineTasksAsTaskChunks.addAll(timeChunks.map { timeChunk ->
+                TaskChunk(task, timeChunk)
+            })
+        }
+    }
+
+    val finalTaskChunksList = allDeadlineTasksAsTaskChunks + allFixedTaskAsTimeChunks
+    return Schedule(finalTaskChunksList)
 }
 
 private fun getFixedTaskList(tasks: List<Task>): List<Task> {
     return tasks.filter { task -> task.taskType is TaskType.FixedTask }
-}
-
-private infix fun List<Task>.intersectsWith(tasks: List<Task>): Boolean {
-    return this.map { task -> task.uid }.intersect(tasks.map { task -> task.uid }.toSet()).isNotEmpty()
 }
