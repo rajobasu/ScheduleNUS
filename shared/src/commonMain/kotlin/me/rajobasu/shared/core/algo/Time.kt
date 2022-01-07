@@ -61,7 +61,7 @@ class Date(
 
     fun getTotalDays() = monthDays.subList(0, months - 1).sum() + days
     override fun equals(other: Any?): Boolean {
-        return if (other is Date) this.years == other.years && this.months == other.months && this.days == this.days
+        return if (other is Date) this.years == other.years && this.months == other.months && this.days == other.days
         else false
     }
 
@@ -70,6 +70,10 @@ class Date(
         result = 31 * result + months
         result = 31 * result + days
         return result
+    }
+
+    override fun toString(): String {
+        return "$years, $months, $days"
     }
 }
 

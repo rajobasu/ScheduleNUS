@@ -8,6 +8,7 @@ fun startIOInteraction() {
     val controller = Controller()
 
     controller.initController(scheduleManager)
+    printSchedule(scheduleManager.currentSchedule)
     while (true) {
         val inputCommandString = readLine()
 
@@ -15,6 +16,7 @@ fun startIOInteraction() {
             controller.exit()
             break
         }
+
 
         val command = parseAndGetCommand(inputCommandString)
         val schedule = controller.processCommand(command)

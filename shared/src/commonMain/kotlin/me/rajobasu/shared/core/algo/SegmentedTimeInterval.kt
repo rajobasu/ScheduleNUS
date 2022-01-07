@@ -71,6 +71,9 @@ fun buildTimeInterval(
     val sortedBlockingTasks = blockingTasks.sortedBy { it.startTime }
     var startDay = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
     var startTime = Time.currentTime()
+    if (startTime.getTotalMinutes() < workSchedulePreference.startTime.getTotalMinutes()) {
+        startTime = workSchedulePreference.startTime
+    }
     val allTimeChunks = mutableListOf<TimeChunk>()
 
     for (i in 0 until days) {

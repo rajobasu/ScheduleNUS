@@ -11,6 +11,10 @@ class TimeChunk(
     fun getDateString(): String {
         return date.toString()
     }
+
+    override fun toString(): String {
+        return "< ${getDateString()} : $startTime : $timeSpanInMins > "
+    }
 }
 
 data class TaskChunk(
