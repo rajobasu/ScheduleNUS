@@ -1,6 +1,6 @@
 package me.rajobasu.shared.core.model
 
-import kotlinx.datetime.LocalDateTime
+import me.rajobasu.shared.core.algo.TaskChunk
 
 class Schedule(
     val taskList: List<TaskChunk>
@@ -12,19 +12,13 @@ class Schedule(
         return taskList.groupBy {
             it.parentTask
         }.filter {
-            it.value.sumOf { x -> x.timeSpanInMins } < it.key.estimatedTimeInMinutes
+            it.value.sumOf { x -> x.timeChunk.timeSpanInMins } < it.key.estimatedTimeInMinutes
         }.map {
             it.key
         }
     }
 
     fun minuteDeficit() {
-        
+
     }
 }
-
-class TaskChunk(
-    val parentTask: Task,
-    val startTime: LocalDateTime,
-    val timeSpanInMins: Int,
-)

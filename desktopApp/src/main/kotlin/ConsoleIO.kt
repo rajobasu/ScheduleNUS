@@ -27,7 +27,7 @@ fun printSchedule(schedule: Schedule) {
     println("=".repeat(10))
     schedule.taskList.forEach { taskChunk ->
         run {
-            println("Scheduled Time: ${taskChunk.startTime}   \n${taskChunk.parentTask.description}")
+            println("Scheduled Time: ${taskChunk.timeChunk.startTime}   \n${taskChunk.parentTask.description}")
             println("-".repeat(6))
         }
     }

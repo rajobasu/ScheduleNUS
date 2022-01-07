@@ -9,9 +9,13 @@ class ScheduleManager {
     private val workSchedulePreference = WorkSchedulePreference(Time.from(9, 0), Time.from(10, 0))
 
     fun addTask(task: Task): Boolean {
-        currentSchedule = generateSchedule(taskList.apply {
-            add(task)
-        })
+        currentSchedule = generateSchedule(
+            taskList.apply {
+                add(task)
+            },
+            sleepSchedulePreference,
+            workSchedulePreference,
+        )
         return true
     }
 
