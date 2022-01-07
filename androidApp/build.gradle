@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
 }
 
 group = 'me.rajobasu'
@@ -11,13 +12,16 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.6.10"
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
 }
 
 android {
     compileSdkVersion 30
     defaultConfig {
         applicationId 'me.rajobasu.androidApp'
-        minSdkVersion 26
+        minSdkVersion 30
         targetSdkVersion 30
         versionCode 1
         versionName '1.0'
@@ -26,5 +30,12 @@ android {
         'release' {
             minifyEnabled false
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }

@@ -1,16 +1,20 @@
 package me.rajobasu.shared.core.algo
 
-import kotlinx.datetime.LocalDate
 import me.rajobasu.shared.core.model.Task
 
 
 class TimeChunk(
-    val date: LocalDate,
+    val date: Date,
     val startTime: Time,
     val timeSpanInMins: Int,
-)
+) {
+    fun getDateString(): String {
+        return date.toString()
+    }
+}
 
-class TaskChunk(
+data class TaskChunk(
     val parentTask: Task,
     val timeChunk: TimeChunk,
 )
+

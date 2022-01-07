@@ -85,7 +85,7 @@ fun buildTimeInterval(
 
             allTimeChunks.add(
                 TimeChunk(
-                    currentDay,
+                    currentDay.toDate(),
                     startTime,
                     Time.from(firstTask.startTime!!).minus(startTime).getTotalMinutes()
                 )
@@ -96,7 +96,7 @@ fun buildTimeInterval(
         if (startTime != workSchedulePreference.endTime) {
             allTimeChunks.add(
                 TimeChunk(
-                    currentDay,
+                    currentDay.toDate(),
                     startTime,
                     workSchedulePreference.endTime.minus(startTime).getTotalMinutes()
                 )
@@ -105,6 +105,5 @@ fun buildTimeInterval(
 
         startTime = workSchedulePreference.startTime
     }
-    print(allTimeChunks)
     return SegmentedTimeInterval(allTimeChunks)
 }

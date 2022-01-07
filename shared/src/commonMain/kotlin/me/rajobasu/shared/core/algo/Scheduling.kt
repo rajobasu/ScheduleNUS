@@ -23,17 +23,20 @@ fun generateSchedule(
 
     // for now assume that we have only deadline tasks.
     val allFixedTaskAsTimeChunks = allFixedTasks.map { task ->
-        TaskChunk(task, TimeChunk(task.startTime!!.date, Time.from(task.startTime!!), task.estimatedTimeInMinutes))
+        TaskChunk(
+            task, TimeChunk(
+                task.startTime!!.date.toDate(), Time.from(task.startTime!!), task
+                    .estimatedTimeInMinutes
+            )
+        )
     }
     val allDeadlineTasksAsTaskChunks = mutableListOf<TaskChunk>()
 
-    println("Deadline tasks : $allDeadlineTasks")
     for (task in allDeadlineTasks) {
         if (schedulableTimeInterval.isEmpty()) {
             break
         }
         val result = schedulableTimeInterval.eatMinutes(task.estimatedTimeInMinutes)
-        println(result)
         result?.run {
             val timeChunks = result.first
             schedulableTimeInterval = result.second

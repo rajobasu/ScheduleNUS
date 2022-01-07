@@ -1,5 +1,6 @@
 package me.rajobasu.shared.core.model
 
+import me.rajobasu.shared.core.algo.Date
 import me.rajobasu.shared.core.algo.TaskChunk
 
 class Schedule(
@@ -21,4 +22,11 @@ class Schedule(
     fun minuteDeficit() {
 
     }
+
+    fun getFirstDate(): Date {
+        return taskList.first().timeChunk.date
+    }
+
+    fun getTaskChunkListForDate(date: Date) = taskList.filter { it.timeChunk.date == date }
+    fun getTaskChunkListForDate(offset: Int) = getTaskChunkListForDate(getFirstDate().add(offset))
 }

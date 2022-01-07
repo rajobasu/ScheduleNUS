@@ -8,10 +8,6 @@ class ScheduleManager {
     private val sleepSchedulePreference = SleepSchedulePreference(Time.from(23, 0), Time.from(8, 0))
     private val workSchedulePreference = WorkSchedulePreference(Time.from(9, 0), Time.from(22, 0))
 
-    init {
-        println(workSchedulePreference.startTime)
-        println(workSchedulePreference.endTime)
-    }
 
     fun addTask(task: Task): Boolean {
 
@@ -22,7 +18,6 @@ class ScheduleManager {
             sleepSchedulePreference,
             workSchedulePreference,
         )
-        println(taskList)
         return true
 
     }
