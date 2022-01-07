@@ -3,7 +3,6 @@ package ui;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import me.rajobasu.shared.core.algo.ScheduleManager;
 
@@ -13,8 +12,7 @@ import me.rajobasu.shared.core.algo.ScheduleManager;
 public class UiManager implements Ui {
 
     public static final String ALERT_DIALOG_PANE_FIELD_ID = "alertDialogPane";
-    private static final String ICON_APPLICATION = "/images/unify.png";
-
+    
     private MainWindow mainWindow;
     private ScheduleManager scheduleManager;
 
@@ -46,7 +44,6 @@ public class UiManager implements Ui {
     @Override
     public void start(Stage primaryStage) {
         //Set the application icon.
-        primaryStage.getIcons().add(getImage(ICON_APPLICATION));
 
         try {
             mainWindow = new MainWindow(primaryStage, scheduleManager);
@@ -56,10 +53,6 @@ public class UiManager implements Ui {
         } catch (Throwable e) {
             showFatalErrorDialogAndShutdown("Fatal error during initializing", e);
         }
-    }
-
-    private Image getImage(String imagePath) {
-        return new Image(MainApp.class.getResourceAsStream(imagePath));
     }
 
     void showAlertDialogAndWait(Alert.AlertType type, String title, String headerText, String contentText) {

@@ -1,6 +1,4 @@
 fun main() {
-    println("Program has started!")
-    println()
-
+    println("Program starting")
     startIOInteraction()
 }

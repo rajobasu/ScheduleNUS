@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.Scene?>
+<?import javafx.stage.Stage?>
+<fx:root minHeight="675" minWidth="1200" onCloseRequest="#handleExit" title="Uni-Fy" type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <icons>
+    <Image url="@/images/unify.png" />
+  </icons>
+  <scene>
+    <Scene>
+      <stylesheets>
+        <URL value="@Fonts.css" />
+        <URL value="@DarkTheme.css" />
+        <URL value="@Extensions.css" />
+      </stylesheets>
+
+      <VBox>
+        <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
+          <Menu mnemonicParsing="false" text="File">
+            <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" onAction="#handleHelp" text="Help" />
+          </Menu>
+        </MenuBar>
+            <HBox minWidth="500.0" prefWidth="500.0" styleClass="pane-with-border" VBox.vgrow="ALWAYS">
+               <children>
+
+              <VBox fx:id="taskList" minWidth="340" prefWidth="340" styleClass="pane-with-border">
+                <padding>
+                  <Insets bottom="10" left="10" right="10" top="10" />
+                </padding>
+                <StackPane fx:id="taskListPanelPlaceholder" VBox.vgrow="ALWAYS" />
+              </VBox>
+                  <StackPane fx:id="weeklyPanelPlaceholder" layoutX="351.0" layoutY="11.0" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+        <StackPane fx:id="commandBoxPlaceholder" styleClass="pane-with-border" VBox.vgrow="NEVER">
+          <padding>
+            <Insets bottom="5" left="10" right="10" top="5" />
+          </padding>
+        </StackPane>
+
+                    <StackPane fx:id="resultDisplayPlaceholder" minHeight="100.0" prefHeight="100.0" prefWidth="380.0" styleClass="pane-with-border" VBox.vgrow="NEVER">
+          <padding>
+            <Insets bottom="5" left="10" right="10" top="5" />
+          </padding>
+        </StackPane>
+
+        <StackPane fx:id="statusbarPlaceholder" VBox.vgrow="NEVER" />
+      </VBox>
+    </Scene>
+  </scene>
+</fx:root>

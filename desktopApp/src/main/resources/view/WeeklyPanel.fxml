@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="weekLabel" alignment="CENTER" contentDisplay="CENTER" maxWidth="Infinity" styleClass="label-header-medium" text="week" textAlignment="CENTER" textFill="WHITE" />
+      <StackPane fx:id="progressPanelPlaceholder" />
+      <HBox fx:id="dailyHBox" VBox.vgrow="ALWAYS" />
+   </children>
+</VBox>
