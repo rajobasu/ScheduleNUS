@@ -39,11 +39,10 @@ fun generateSchedule(
     }
 
 
-    repeat(5) {
+    repeat(10) {
         iterateImprovementOnSchedule(schedulableTimeInterval, simpleTimeline)
     }
 
-    println(simpleTimeline)
 
     val allDeadlineTasksAsTaskChunks = simpleTimeline.convertToActualTaskChunkList()
     val finalTaskChunksList = allDeadlineTasksAsTaskChunks + allFixedTaskAsTimeChunks
@@ -57,9 +56,7 @@ private fun getFixedTaskList(tasks: List<Task>): List<Task> {
 
 fun iterateImprovementOnSchedule(schedulableTimeInterval: SchedulableTimeInterval, simpleTimeline: SimpleTimeline) {
     val timeslot = simpleTimeline.getRandomTimeSlot()
-    println("Minute: ${schedulableTimeInterval.minutesBefore(timeslot.task.deadline!!)}")
     val startTime = simpleTimeline.findTime(60, schedulableTimeInterval.minutesBefore(timeslot.task.deadline!!))
-    println(startTime)
     startTime?.let {
         simpleTimeline.unBlockTime(timeslot.minutesFrom, timeslot.minutesEnd)
         simpleTimeline.blockTime(startTime, startTime + timeslot.task.estimatedTimeInMinutes, timeslot.task)
