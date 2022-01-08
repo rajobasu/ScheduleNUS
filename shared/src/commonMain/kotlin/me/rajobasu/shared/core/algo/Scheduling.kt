@@ -39,14 +39,14 @@ fun generateSchedule(
     }
 
 
-    repeat(10) {
+    repeat(30) {
         iterateImprovementOnSchedule(schedulableTimeInterval, simpleTimeline)
     }
 
 
     val allDeadlineTasksAsTaskChunks = simpleTimeline.convertToActualTaskChunkList()
     val finalTaskChunksList = allDeadlineTasksAsTaskChunks + allFixedTaskAsTimeChunks
-    return Schedule(finalTaskChunksList)
+    return Schedule(finalTaskChunksList.sortedBy { it.timeChunk.startTime.getTotalMinutes() })
 }
 
 private fun getFixedTaskList(tasks: List<Task>): List<Task> {

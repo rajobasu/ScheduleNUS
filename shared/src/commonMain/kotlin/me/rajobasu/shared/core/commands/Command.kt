@@ -9,7 +9,7 @@ sealed class Command {
     abstract fun execute(scheduleManager: ScheduleManager): Boolean
 }
 
-class AddCommand(
+class AddDeadlineCommand(
     private var arguments: List<String>
 ) : Command() {
     private val task: Task
@@ -35,6 +35,40 @@ class AddCommand(
     override fun execute(scheduleManager: ScheduleManager) = scheduleManager.addTask(task)
 }
 
+
+class AddFixedCommand(
+    private var arguments: List<String>
+) : Command() {
+    private val task: Task
+
+    init {
+        if (arguments.size != 3) {
+            throw IllegalArgumentException("Incorrect number of paramaters for Add Command")
+        }
+        arguments = arguments.map { x -> x.trim() }
+
+        val startTime = arguments[0].replace(' ', 'T').toLocalDateTime()
+        val expectedTime = arguments[1].toInt()
+        val description = arguments[2]
+
+        task = Task(
+            estimatedTimeInMinutes = expectedTime,
+            startTime = startTime,
+            description = description,
+            taskType = TaskType.FixedTask.LectureTask,
+        )
+    }
+
+    override fun execute(scheduleManager: ScheduleManager) = scheduleManager.addTask(task)
+}
+
+class RefreshCommand : Command() {
+    override fun execute(scheduleManager: ScheduleManager): Boolean {
+        scheduleManager.refresh()
+        return true
+    }
+
+}
 
 
 

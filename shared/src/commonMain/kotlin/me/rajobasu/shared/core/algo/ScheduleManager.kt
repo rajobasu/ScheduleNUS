@@ -1,5 +1,6 @@
 package me.rajobasu.shared.core.algo
 
+import me.rajobasu.shared.addFixedTaskCommandSamples
 import me.rajobasu.shared.addTaskCommandSamples
 import me.rajobasu.shared.core.commands.parseAndGetCommand
 import me.rajobasu.shared.core.model.Schedule
@@ -16,6 +17,9 @@ class ScheduleManager {
         addTaskCommandSamples.forEach {
             parseAndGetCommand(it).execute(this)
         }
+        addFixedTaskCommandSamples.forEach {
+            parseAndGetCommand(it).execute(this)
+        }
     }
 
     fun addTask(task: Task): Boolean {
@@ -27,5 +31,9 @@ class ScheduleManager {
             workSchedulePreference,
         )
         return true
+    }
+
+    fun refresh() {
+        currentSchedule = generateSchedule(taskList, sleepSchedulePreference, workSchedulePreference)
     }
 }
