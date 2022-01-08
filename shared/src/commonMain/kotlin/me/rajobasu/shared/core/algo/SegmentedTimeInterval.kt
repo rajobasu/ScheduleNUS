@@ -33,9 +33,10 @@ class SimpleTimeline(
 ) {
     data class TimelineSegment(val minutesFrom: Int, val minutesEnd: Int, val task: Task)
 
-    private val timeline = mutableSetOf<TimelineSegment>()
+    private val timeline = mutableListOf<TimelineSegment>()
 
     init {
+
         timeline.add(
             TimelineSegment(
                 schedulableTimeInterval.totalMinutes(),
@@ -62,24 +63,29 @@ class SimpleTimeline(
 
     fun findTime(length: Int, deadline: Int): Int? {
         var start = 0
-        for (e in timeline) {
+        val startPointList = mutableListOf<Pair<Int, Int>>()
+        for (e in timeline.sortedBy { it.minutesFrom }) {
             val nextBlock = min(e.minutesFrom, deadline)
-            if (start + length > nextBlock) {
-                start = e.minutesEnd
-                if (nextBlock == deadline) {
-                    return null
-                }
+            println("$start, ${e.minutesFrom} , $nextBlock , $deadline")
+            if (start > deadline) break
+            if (start + length <= nextBlock) {
+                startPointList.add(Pair(start, nextBlock))
             }
-            return getRandomStartTime(start, nextBlock)
+            start = e.minutesEnd
         }
-        return null
+        if (startPointList.isEmpty()) return null
+
+
+        val range = startPointList[Random(Clock.System.now().epochSeconds).nextInt(startPointList.size)]
+        return getRandomStartTime(range.first, range.second - length)
     }
 
     fun convertToActualTaskChunkList(): List<TaskChunk> {
         var current = 0
         val taskChunks = mutableListOf<TaskChunk>()
-        for (e in timeline) {
-            if (e.minutesFrom == schedulableTimeInterval.totalMinutes()) break
+        val lastPoint = schedulableTimeInterval.totalMinutes()
+        for (e in timeline.sortedBy { it.minutesFrom }) {
+            if (e.minutesFrom == lastPoint) break
             if (current < e.minutesFrom) schedulableTimeInterval.eatMinutes(e.minutesFrom - current)
             schedulableTimeInterval.eatMinutes(e.minutesEnd - e.minutesFrom)?.first?.forEach {
                 taskChunks.add(TaskChunk(e.task, it))
@@ -87,6 +93,19 @@ class SimpleTimeline(
             current = e.minutesEnd
         }
         return taskChunks
+    }
+
+    fun getRandomTimeSlot(): TimelineSegment {
+        val bigEnough = timeline.filter { it.minutesEnd - it.minutesFrom >= 60 }
+        return bigEnough[Random(
+            Clock.System.now()
+                .epochSeconds
+        ).nextInt(bigEnough.size)]
+    }
+
+
+    override fun toString(): String {
+        return "$timeline"
     }
 }
 
@@ -106,6 +125,7 @@ class SegmentedTimeInterval(
         val timeChunksGiven = mutableListOf<TimeChunk>()
         var totMinutesLeft = minutes
         val newTimeChunksList = allTimeChunks.toMutableList()
+        println("MINS : $minutes")
         while (totMinutesLeft > 0) {
             val timeChunk = newTimeChunksList.removeFirst()
             if (timeChunk.timeSpanInMins <= totMinutesLeft) {
@@ -138,10 +158,7 @@ class SegmentedTimeInterval(
             if (tc.date.getTotalDays() < date.getTotalDays()) {
                 tc.timeSpanInMins
             } else {
-                min(
-                    tc.timeSpanInMins,
-                    tc.timeSpanInMins + tc.startTime.getTotalMinutes() - time.getTotalMinutes()
-                )
+                min(tc.timeSpanInMins, time.getTotalMinutes() - tc.startTime.getTotalMinutes())
             }
         }
     }

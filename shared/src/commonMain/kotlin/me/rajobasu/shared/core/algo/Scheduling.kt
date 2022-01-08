@@ -34,13 +34,16 @@ fun generateSchedule(
 
     var timeConsumed = 0
     for (task in allDeadlineTasks) {
-        simpleTimeline.blockTime(timeConsumed, task.estimatedTimeInMinutes, task)
+        simpleTimeline.blockTime(timeConsumed, timeConsumed + task.estimatedTimeInMinutes, task)
+        timeConsumed += task.estimatedTimeInMinutes
     }
 
-    repeat(tasks.size) {
-        iterateImprovementOnSchedule(simpleTimeline, tasks)
+
+    repeat(5) {
+        iterateImprovementOnSchedule(schedulableTimeInterval, simpleTimeline)
     }
 
+    println(simpleTimeline)
 
     val allDeadlineTasksAsTaskChunks = simpleTimeline.convertToActualTaskChunkList()
     val finalTaskChunksList = allDeadlineTasksAsTaskChunks + allFixedTaskAsTimeChunks
@@ -52,14 +55,14 @@ private fun getFixedTaskList(tasks: List<Task>): List<Task> {
 }
 
 
-fun iterateImprovementOnSchedule(simpleTimeline: SimpleTimeline, tasks: List<Task>) {
-
-}
-
-class TaskSegment(
-    val parentTask: Task,
-
-    ) {
-
+fun iterateImprovementOnSchedule(schedulableTimeInterval: SchedulableTimeInterval, simpleTimeline: SimpleTimeline) {
+    val timeslot = simpleTimeline.getRandomTimeSlot()
+    println("Minute: ${schedulableTimeInterval.minutesBefore(timeslot.task.deadline!!)}")
+    val startTime = simpleTimeline.findTime(60, schedulableTimeInterval.minutesBefore(timeslot.task.deadline!!))
+    println(startTime)
+    startTime?.let {
+        simpleTimeline.unBlockTime(timeslot.minutesFrom, timeslot.minutesEnd)
+        simpleTimeline.blockTime(startTime, startTime + timeslot.task.estimatedTimeInMinutes, timeslot.task)
+    }
 }
 

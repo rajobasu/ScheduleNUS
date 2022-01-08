@@ -1,17 +1,7 @@
 import me.rajobasu.shared.core.algo.Date
-import me.rajobasu.shared.core.algo.ScheduleManager
 
 fun main() {
     println("Program starting")
-    testDateAddition()
-    val scheduleManager = ScheduleManager()
-    println(scheduleManager.currentSchedule.getTaskChunkListForDate(0))
-    println(scheduleManager.currentSchedule.getTaskChunkListForDate(1))
-    val firstDate = scheduleManager.currentSchedule.getFirstDate().add(1)
-    println(firstDate)
-    println(firstDate.add(1) == firstDate)
-
-
     startIOInteraction()
 }
 
